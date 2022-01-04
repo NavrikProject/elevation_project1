@@ -1,79 +1,55 @@
 const router = require("express").Router();
 const connection = require("../dbConnection.js");
-const bcrypt = require("bcrypt");
-const moment = require("moment");
+
+const {
+  verifyToken,
+  verifyTokenAndAuthorization,
+} = require("../middleware/verifyToken");
+const {
+  register,
+  login,
+  forgotpassword,
+  resetpassword,
+  changePassword,
+} = require("../controllers/authControllers.js");
 
 // register for a user
-router.post("/register", async (req, res) => {
-  const username = req.body.username;
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const type = req.body.type;
+router.post("/register", register);
 
-  const saltRound = 10;
-  const saltRounds = await bcrypt.genSalt(saltRound);
-  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-
-  var mysqlTimestamp = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
-
-  try {
-    const result = connection.query(
-      "INSERT INTO user_dtls (user_name, user_pwd, user_logindate,user_logintime, user_firstname, user_lastname, user_status, user_creation,user_modified_by, user_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?)",
-      [
-        username,
-        hashedPassword,
-        new Date(),
-        mysqlTimestamp,
-        firstName,
-        lastName,
-        1,
-        new Date(),
-        "admin",
-        type,
-      ]
-    );
-    if (!result) {
-      console.log("There is an error while creating the user");
-    } else {
-      console.log("Successfully created the registration");
-    }
-  } catch (error) {
-    console.log(error.message);
-  }
-});
 // login routes
-router.post("/login", async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  const type = req.body.type;
-  const saltRound = 10;
-  const saltRounds = await bcrypt.genSalt(saltRound);
+router.post("/login", login);
 
-  try {
-    const result = connection.query(
-      "SELECT user_pwd FROM user_dtls where user_name= ? AND user_type= ? ",
-      [username, type],
-      (err, rows) => {
-        var output = {};
-        if (rows.length != 0) {
-          var password_hash = rows[0]["user_pwd"];
-          const verified = bcrypt.compare(password, password_hash);
-          if (verified) {
-            output["status"] = 1;
-          } else {
-            output["status"] = 0;
-            output["message"] = "Invalid password";
+// to change password when login is successful
+
+router.put(
+  "/change-password/:id",
+  verifyTokenAndAuthorization,
+  async (req, res) => {
+    const id = req.params.id;
+    const oldPassword = req.body.oldPassword;
+    const newPassword = req.body.newPassword;
+    // const saltRounds = await bcrypt.genSalt(10);
+    // const hashedPassword = await bcrypt.hash(oldPassword, saltRounds);
+    try {
+      connection.query(
+        "SELECT * FROM users_dtls WHERE user_id =?",
+        [id],
+        (err, result) => {
+          if (result) {
+            res.send("User found");
           }
-        } else {
-          output["status"] = 0;
-          output["message"] = "Invalid username and password";
         }
-        console.log(output);
-      }
-    );
-  } catch (error) {
-    console.log(error.message);
+      );
+    } catch (error) {
+      res.send(error.message);
+    }
   }
-});
+);
+
+// to forgot password
+router.post("/forgotpassword", forgotpassword);
+
+// to reset password
+router.put("/resetpassword/:resetToken", resetpassword);
 
 module.exports = router;

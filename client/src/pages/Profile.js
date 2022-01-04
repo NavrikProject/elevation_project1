@@ -1,15 +1,16 @@
 import React from "react";
-import NavBarAndRes from "../components/Normal/Navbar/NavBarAndRes";
-import ProfileForm from "../components/Normal/Forms/ProfileForm/ProfileForm";
-import Footer from "../components/Normal/Footer/Footer";
-const Register = () => {
+import Footer from "../components/User/Footer/Footer";
+import NavBarAndRes from "../components/User/Navbar/NavBarAndRes";
+import SingleProfile from "../components/Forms/ProfileForm/SingleProfile";
+
+const Profile = () => {
   return (
     <React.Fragment>
       <NavBarAndRes />
-      <ProfileForm />
+      <SingleProfile />
       <Footer />
     </React.Fragment>
   );
 };
 
-export default Register;
+export default Profile;

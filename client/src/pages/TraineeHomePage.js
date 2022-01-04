@@ -1,15 +1,16 @@
 import React from "react";
+import SingleProfile from "../components/Forms/ProfileForm/SingleProfile";
 import Footer from "../components/User/Footer/Footer";
 import NavBarAndRes from "../components/User/Navbar/NavBarAndRes";
-import SingleTrainer from "../components/Trainers/SingleTrainer/SingleTrainer";
-const SingleTrainerPage = () => {
+
+const TraineeHomePage = () => {
   return (
     <>
-      <NavBarAndRes />;
-      <SingleTrainer />
+      <NavBarAndRes />
+      <SingleProfile />
       <Footer />
     </>
   );
 };
 
-export default SingleTrainerPage;
+export default TraineeHomePage;

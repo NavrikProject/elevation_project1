@@ -1,16 +1,16 @@
 import React from "react";
 import Footer from "../components/User/Footer/Footer";
 import NavBarAndRes from "../components/User/Navbar/NavBarAndRes";
-import RegisterForm from "../components/Forms/RegisterForm/RegisterForm";
+import Trainee from "../components/Trainee/Trainee";
 
-const Register = () => {
+const TraineeProfilePage = () => {
   return (
     <React.Fragment>
       <NavBarAndRes />
-      <RegisterForm />
+      <Trainee />
       <Footer />
     </React.Fragment>
   );
 };
 
-export default Register;
+export default TraineeProfilePage;

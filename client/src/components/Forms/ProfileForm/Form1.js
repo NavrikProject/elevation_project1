@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { Context } from "../../../context/Context";
+import { useSelector } from "react-redux";
 import {
   Form,
   FormAddress,
@@ -12,25 +12,25 @@ import {
   FormLabel,
   FormOption,
   FormSelect,
+  FormInputFile,
 } from "./FormProfileElements";
 
 const Form1 = () => {
   const [mobile, setMobile] = useState("");
   const [dob, setDob] = useState("");
-  // const [image, setImage] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
   const [address, setAddress] = useState("");
   const [experience, setExperience] = useState("");
   const [graduate, setGraduate] = useState("");
   const [profession, setProfession] = useState("");
-  const { user } = useContext(Context);
-  const token = user?.accessToken;
 
+  const user = useSelector((state) => state.user.currentUser);
+  const token = user?.accessToken;
   const profileAccountHandler = async (event) => {
     event.preventDefault();
-    console.log(address, experience, graduate, profession, mobile, dob);
     try {
-      const res = await axios.put(
-        `/trainee/profile/update/${user?.id}`,
+      const res = await axios.post(
+        `/trainee/profile/create/${user?.id}`,
         {
           mobile: mobile,
           dob: dob,
@@ -38,10 +38,10 @@ const Form1 = () => {
           experience: experience,
           graduate: graduate,
           profession: profession,
+          profilePicture: profilePicture,
         },
         { headers: { authorization: "Bearer " + token } }
       );
-      console.log(res.data);
     } catch (error) {
       console.log(error.message);
     }
@@ -99,6 +99,14 @@ const Form1 = () => {
           <FormAddress onChange={(e) => setAddress(e.target.value)}>
             Enter your address
           </FormAddress>
+          <FormFlex>
+            <FormLabel htmlFor="">Choose your image</FormLabel>
+            <FormInputFile
+              type="file"
+              onChange={(e) => setProfilePicture(e.target.files)}
+            />
+          </FormFlex>
+
           <FormBtn>Save</FormBtn>
         </Form>
       </FormDiv>

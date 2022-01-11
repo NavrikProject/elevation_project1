@@ -1,12 +1,12 @@
 import React from "react";
 import Footer from "../components/User/Footer/Footer";
-import NavBarAndRes from "../components/User/Navbar/NavBarAndRes";
 import About from "../components/User/About/About";
+import NavbarRes from "../components/Navbar/UserNavbar/NavbarRes";
 
 const AboutUs = () => {
   return (
     <React.Fragment>
-      <NavBarAndRes />
+      <NavbarRes />
       <About />
       <Footer />
     </React.Fragment>

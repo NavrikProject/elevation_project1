@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Context } from "../../../context/Context";
+import React from "react";
+import { useSelector } from "react-redux";
 import LoginForm from "../../Forms/LoginForm/LoginForm";
 import Home from "./Home";
 import {
@@ -9,12 +9,11 @@ import {
 } from "./HomeSectElements";
 
 const HomeSection = () => {
-  const { user } = useContext(Context);
-
+  const user = useSelector((state) => state.user.currentUser);
   return (
     <HomeSect>
       <HomeSectionComponent>
-        <HomeWrapper>{user ? <Home /> : <LoginForm />}</HomeWrapper>
+        <HomeWrapper>{user?.type ? <Home /> : <LoginForm />}</HomeWrapper>
       </HomeSectionComponent>
     </HomeSect>
   );

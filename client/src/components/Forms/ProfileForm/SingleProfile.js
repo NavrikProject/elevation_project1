@@ -20,30 +20,34 @@ import {
   SkipButton,
   SkipBtnDiv,
 } from "./SingleProfileElements";
+import { useSelector } from "react-redux";
 
 const SingleProfile = () => {
   const [hideForm, setFormHide] = useState(false);
   const [mobile, setMobile] = useState("");
   const [dob, setDob] = useState("");
-  // const [image, setImage] = useState("");
+  const [image, setImage] = useState("");
   const [address, setAddress] = useState("");
   const [experience, setExperience] = useState("");
   const [graduate, setGraduate] = useState("");
   const [profession, setProfession] = useState("");
-  const { user } = useContext(Context);
+  const user = useSelector((state) => state.user.currentUser);
   const token = user?.accessToken;
   const profileSubmitHandler = async (event) => {
     event.preventDefault();
+    console.log(image);
     try {
       const res = await axios.post(
-        `/trainee/profile/create/${user?.id}`,
+        `/trainee/profile/create`,
         {
+          id: user.id,
           mobile: mobile,
           dob: dob,
           address: address,
           experience: experience,
           graduate: graduate,
           profession: profession,
+          file: image,
         },
         { headers: { authorization: "Bearer " + token } }
       );
@@ -145,7 +149,11 @@ const SingleProfile = () => {
                 <FormInputDiv>
                   <FormFlex>
                     <FormLabel>Profile Picture:</FormLabel>
-                    <FormInputFile type="file" />
+                    <FormInputFile
+                      type="file"
+                      name="file"
+                      onChange={(event) => setImage(event.target.files)}
+                    />
                   </FormFlex>
                 </FormInputDiv>
                 <FormBtn>Save</FormBtn>

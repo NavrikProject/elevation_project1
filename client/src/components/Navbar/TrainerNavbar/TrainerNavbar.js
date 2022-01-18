@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { FaBars, FaSearch, FaShoppingCart } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import {
   LogoContainer,
   LogoImage,
@@ -17,19 +18,17 @@ import {
   RightbarContainerMenu,
   RightbarContainerList,
   SearchBoxInput,
-  CartBox,
   FaSearchIcon,
-  FaCartIcon,
 } from "./TrainerNavbarElements.js";
-
 import logo from "../../../images/logo-rm.png";
+import { logOut } from "../../../redux/userRedux.js";
 
-import { Context } from "../../../context/Context";
 const TrainerNavbar = ({ toggleMenuItems }) => {
+  const user = useSelector((state) => state.user.currentUser);
   let navigate = useNavigate();
-  const { user, dispatch } = useContext(Context);
+  const dispatch = useDispatch();
   const onLogoutHandler = () => {
-    dispatch({ type: "LOGOUT" });
+    dispatch(logOut());
     navigate("/");
   };
   return (
@@ -91,7 +90,14 @@ const TrainerNavbar = ({ toggleMenuItems }) => {
               My Courses
             </Link>
           </RightbarContainerList>
-          <RightbarContainerList>Profile</RightbarContainerList>
+          <RightbarContainerList>
+            <Link
+              style={{ textDecoration: "none", color: "white" }}
+              to={`/trainer/profile/${user.id}`}
+            >
+              Profile
+            </Link>
+          </RightbarContainerList>
           <RightbarContainerList>
             <Link
               to={`/cart`}

@@ -24,8 +24,6 @@ import {
 } from "./CourseCardElements";
 const CourseCard = () => {
   const [courses, setCourses] = useState([]);
-  const course_title = "course-title";
-  const course_id = 1;
   const trainerId = 6;
 
   useEffect(() => {
@@ -38,7 +36,7 @@ const CourseCard = () => {
       }
     };
     getAllCourse();
-  }, [course_id]);
+  }, []);
 
   return (
     <CourseSectionDiv>
@@ -47,7 +45,7 @@ const CourseCard = () => {
           <CourseBody>
             <Link
               style={{ textDecoration: "none", color: "black" }}
-              to={`/courses/${course.course_id}`}
+              to={`/courses/${course.course_category}/${course.course_id}`}
             >
               <CourseImgBox>
                 <CourseImg
@@ -58,7 +56,7 @@ const CourseCard = () => {
             </Link>
             <Link
               style={{ textDecoration: "none", color: "black" }}
-              to={`/courses/${course_title}`}
+              to={`/courses/${course.course_id}`}
             >
               <CourseTitleBox>
                 <CourseTitleH1>{course.course_name}</CourseTitleH1>
@@ -89,7 +87,7 @@ const CourseCard = () => {
                 <i class="fas fa-star"></i>
                 <i class="fas fa-star-half-alt"></i>
               </CourseReviewsP>
-              <CoursePrice>Price : $499</CoursePrice>
+              <CoursePrice>{course.course_price}</CoursePrice>
             </CourseReviewsBox>
             <Link
               style={{ textDecoration: "none", color: "black" }}

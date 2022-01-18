@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaShoppingCart } from "react-icons/fa";
 export const Nav = styled.nav`
   position: sticky;
   top: 0;
@@ -85,11 +85,33 @@ export const SearchItemText = styled.p`
 export const SearchForm = styled.form`
   position: relative;
 `;
+export const CartBox = styled.div`
+  padding: 0 !important;
+  position: relative !important;
+`;
 export const SearchBoxInput = styled.input`
   padding: 6px;
   margin-top: 8px;
   font-size: 17px;
   border: none;
+`;
+export const FaCartIcon = styled(FaShoppingCart)`
+  font-size: 22px !important;
+  color: #fff;
+  /* padding: 0; */
+  position: relative;
+`;
+export const CartQuantity = styled.p`
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  width: 20px;
+  font-size: 13px;
+  text-align: center;
+  height: 20px;
+  border-radius: 50%;
+  color: #fff;
 `;
 export const FaSearchIcon = styled(FaSearch)`
   font-size: 24px;

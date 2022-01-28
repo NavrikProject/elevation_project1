@@ -26,9 +26,10 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import JobSeekerHomePage from "./pages/JobSeekerHomePage";
 import NotFound from "./pages/Not-found";
+import JoinNow from "./pages/TrainerPages/JoinNow";
 const App = () => {
   const user = useSelector((state) => state.user.currentUser);
-  console.log(user?.type);
+
   return (
     <React.Fragment>
       <ToastContainer />
@@ -48,7 +49,7 @@ const App = () => {
           {/* single course page */}
           <Route path="/courses/domain/:id" element={<SingleCoursePage />} />
           <Route path="/courses/it-skills/:id" element={<SingleCoursePage />} />
-          <Route path="/courses/software/:id" element={<SingleCoursePage />} />
+          <Route path="/courses/rpa/:id" element={<SingleCoursePage />} />
           {/* all trainers route*/}
           <Route path="/trainers" element={<Trainers />} />
           {/* sp single trainer page */}
@@ -61,6 +62,7 @@ const App = () => {
             <Route path="/" exact element={<Home />} />
           )}
           <Route path="/pay" element={<Pay />} />
+          <Route path="/trainer/join-now" element={<JoinNow />} />
           {user?.type === "trainee" ? (
             <Route
               path="/trainee/profile/update/:id"
@@ -69,7 +71,7 @@ const App = () => {
           ) : (
             <Route path="*" element={<Navigate to="/Not-found" />} />
           )}
-          
+
           {/* trainer home page after login */}
           {user?.type === "trainer" ? (
             <Route path="/trainer" exact element={<TrainerHomePage />} />
@@ -83,7 +85,7 @@ const App = () => {
               element={<TrainerProfilePage />}
             />
           ) : (
-            <Route path="*" element={<Navigate to="/login" />} />
+            <Route path="/login" element={<Navigate to="/login" />} />
           )}
           {/* job seeker home page after login */}
           {user?.type === "job-seeker" ? (

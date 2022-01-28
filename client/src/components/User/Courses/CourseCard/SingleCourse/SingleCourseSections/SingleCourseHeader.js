@@ -22,8 +22,8 @@ import {
   BuyNowBtn,
 } from "./HeaderElements";
 import { addCourse } from "../../../../../../redux/cartRedux";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 const SingleCourseHeader = ({ data }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,6 +31,7 @@ const SingleCourseHeader = ({ data }) => {
     dispatch(addCourse(course));
     navigate("/trainee/cart");
   };
+  const user = useSelector((state) => state.user.currentUser);
   return (
     <SingleCourseSect>
       <SingleCourseSection>
@@ -38,11 +39,8 @@ const SingleCourseHeader = ({ data }) => {
           {data?.data?.map((course) => (
             <SingleCourseFlex key={course.course_id}>
               <HeaderRightCol>
-                <SingleCourseTitle>{course.course_name}</SingleCourseTitle>
-                <CourseDescription>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                  Totam ratione facilis dolor ex expedita quae!
-                </CourseDescription>
+                <SingleCourseTitle>{course.course_title}</SingleCourseTitle>
+                <CourseDescription>{course.course_desc} </CourseDescription>
                 <FlexBox>
                   <Label>Rating :</Label>
                   <RatingsCourse> {course.course_rating} stars</RatingsCourse>
@@ -55,7 +53,13 @@ const SingleCourseHeader = ({ data }) => {
                 </FlexBox>
                 <FlexBox>
                   <Label>Last update on :</Label>
-                  <LastUpdated> 23/10/2021</LastUpdated>
+                  <LastUpdated>
+                    {new Date(course.course_cr_date).toLocaleDateString()}
+                  </LastUpdated>
+                </FlexBox>
+                <FlexBox>
+                  <Label>Course CreatedBy :</Label>
+                  <LastUpdated>{course.course_created_by}</LastUpdated>
                 </FlexBox>
                 <FlexBox>
                   <Label>Languages :</Label>
@@ -64,7 +68,7 @@ const SingleCourseHeader = ({ data }) => {
               </HeaderRightCol>
               <HeaderLeftCol>
                 <HeaderLeftBox>
-                  <HeaderRightImg src="https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" />
+                  <HeaderRightImg src="https://t3.ftcdn.net/jpg/02/84/02/36/360_F_284023634_KjMhFyIQvm6Skawcp0izYTsJKvhCPLoZ.jpg" />
                   <FlexBox>
                     <Label>Price:</Label>
                     <HeaderRightPriced>
@@ -77,7 +81,13 @@ const SingleCourseHeader = ({ data }) => {
                     </AddToCartBtn>
                     <WishList>Like</WishList>
                   </FlexBox>
-                  <BuyNowBtn>Buy Now</BuyNowBtn>
+                  {user ? (
+                    <BuyNowBtn>Buy Now</BuyNowBtn>
+                  ) : (
+                    <Link to="/login">
+                      <BuyNowBtn>Login</BuyNowBtn>
+                    </Link>
+                  )}
                 </HeaderLeftBox>
               </HeaderLeftCol>
             </SingleCourseFlex>

@@ -53,6 +53,7 @@ const Info = styled.div`
 const Product = styled.div`
   display: flex;
   justify-content: space-between;
+  padding: 10px;
 `;
 
 const ProductDetail = styled.div`
@@ -61,7 +62,7 @@ const ProductDetail = styled.div`
 `;
 
 const Image = styled.img`
-  width: 150px;
+  width: 180px;
 `;
 
 const Details = styled.div`
@@ -71,7 +72,7 @@ const Details = styled.div`
   justify-content: space-around;
 `;
 
-const ProductName = styled.span``;
+const ProductName = styled.h1``;
 
 const ProductId = styled.span``;
 
@@ -153,7 +154,7 @@ const Button = styled.button`
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const user = useSelector((state) => state.user.currentUser);
-  console.log(cart);
+
   const dispatch = useDispatch();
   const removeFromCart = (course) => {
     dispatch(removeCourse(course));
@@ -161,6 +162,8 @@ const Cart = () => {
   const clearCartHandler = () => {
     dispatch(clearCart());
   };
+  console.log(cart.total);
+
   return (
     <Container>
       <NavBarAndRes />
@@ -195,10 +198,10 @@ const Cart = () => {
               cart?.courses?.map((course) => (
                 <Product key={course.course_id}>
                   <ProductDetail>
-                    <Image src="https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" />
+                    <Image src="https://t3.ftcdn.net/jpg/02/84/02/36/360_F_284023634_KjMhFyIQvm6Skawcp0izYTsJKvhCPLoZ.jpg" />
                     <Details>
                       <ProductName>{course.course_title}</ProductName>
-                      <ProductId>{course.course_id}</ProductId>
+                      <ProductId>{course.course_desc}</ProductId>
                     </Details>
                   </ProductDetail>
                   <PriceDetail>

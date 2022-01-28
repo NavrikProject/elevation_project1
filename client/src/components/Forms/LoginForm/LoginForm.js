@@ -30,6 +30,10 @@ import {
   SlideDiv2,
   SlideDiv3,
   SlideDiv4,
+  PwdField,
+  PwdIcons,
+  ShowIcon,
+  HideIcon,
 } from "./LoginFormElements";
 import StudentImg from "../../../images/student.png";
 import TraineeImg from "../../../images/train.png";
@@ -45,6 +49,10 @@ const HomeSection = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [type, setType] = useState("trainee");
+  const [error, setError] = useState("");
+  const [wrongPwd, setWrongPwd] = useState("");
+  const [showIcon, setShowIcon] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -52,29 +60,42 @@ const HomeSection = () => {
   const loginFormSubmitHandler = async (event) => {
     event.preventDefault();
     dispatch(loginStart());
-    try {
-      const res = await axios.post(
-        "/auth/login",
-        {
-          username: email,
-          password: password,
-          type: type,
-        },
-        (err, data) => {
-          if (err) {
-            console.log(err.message);
-          }
+    const res = await axios.post(
+      "/auth/login",
+      {
+        username: email,
+        password: password,
+        type: type,
+      },
+      (err, data) => {
+        if (err) {
+          console.log(err.message);
         }
-      );
-      dispatch(loginSuccess(res.data));
-      const userType = res.data.type;
+      }
+    );
+    if (res.data.success) {
+      dispatch(loginSuccess(res.data.success));
+      const userType = res.data.success.type;
       navigate(`/${userType}`);
-    } catch (error) {
-      dispatch(loginFailure());
-      console.log(error.message);
+    }
+
+    if (res.data.notFound) {
+      dispatch(loginFailure(res.data.notFound));
+      setError(res.data.notFound);
+      setWrongPwd("");
+      // navigate(`/login`);
+    }
+    if (res.data.wrong) {
+      dispatch(loginFailure(res.data.wrong));
+      setWrongPwd(res.data.wrong);
+      setError("");
+      // navigate(`/login`);
     }
   };
-
+  setTimeout(() => {
+    setError("");
+    setWrongPwd("");
+  }, 7000);
   const [isActive1, setIsActive1] = useState(true);
   const [isActive2, setIsActive2] = useState(false);
   const [isActive3, setIsActive3] = useState(false);
@@ -127,6 +148,8 @@ const HomeSection = () => {
               </WrapperRight>
               <WrapperCenter>
                 <TitleText></TitleText>
+                {error && <p style={{ color: "red" }}>{error}</p>}
+                {wrongPwd && <p style={{ color: "red" }}>{wrongPwd}</p>}
                 <FormContainer>
                   <SlideControls>
                     <SlideDiv1
@@ -163,25 +186,35 @@ const HomeSection = () => {
                       <Field>
                         <Input
                           required
+                          value={email}
                           type="text"
                           placeholder="Enter your email"
                           onChange={(e) => setEmail(e.target.value)}
                         />
                       </Field>
-                      <Field>
+                      <PwdField>
                         <Input
-                          required={true}
-                          type="text"
+                          required
+                          value={password}
+                          type={showIcon ? "text" : "password"}
                           placeholder="Enter your password"
                           onChange={(e) => setPassword(e.target.value)}
-                          // pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$"
                         />
-                      </Field>
+
+                        <PwdIcons onClick={(e) => setShowIcon(!showIcon)}>
+                          {showIcon ? <ShowIcon /> : <HideIcon />}
+                        </PwdIcons>
+                      </PwdField>
                       <PassLink>
                         <PassLinkA>Forgot Password ?</PassLinkA>
                       </PassLink>
                       <Field>
-                        <InputButton type="submit" value="Login" />
+                        <InputButton
+                          type="submit"
+                          disabled={!email || !password || !type}
+                        >
+                          Login
+                        </InputButton>
                       </Field>
                       <SignUpLink>
                         Not a Member yet ?

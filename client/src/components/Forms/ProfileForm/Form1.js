@@ -14,8 +14,11 @@ import {
   FormSelect,
   FormInputFile,
 } from "./FormProfileElements";
+import { toast } from "react-toastify";
 
 const Form1 = () => {
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [mobile, setMobile] = useState("");
   const [dob, setDob] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
@@ -26,11 +29,12 @@ const Form1 = () => {
 
   const user = useSelector((state) => state.user.currentUser);
   const token = user?.accessToken;
+
   const profileAccountHandler = async (event) => {
     event.preventDefault();
     try {
-      const res = await axios.post(
-        `/trainee/profile/create/${user?.id}`,
+      const res = await axios.put(
+        `/trainee/profile/update/${user?.id}`,
         {
           mobile: mobile,
           dob: dob,
@@ -42,17 +46,36 @@ const Form1 = () => {
         },
         { headers: { authorization: "Bearer " + token } }
       );
+      if (res.data.success) {
+        setSuccess(res.data.success);
+        toast.success("Successfully update your personal details", {
+          position: "top-center",
+        });
+      }
+      if (res.data.error) {
+        setError(res.data.error);
+        toast.error("There was a problem updating your personal details", {
+          position: "top-center",
+        });
+      }
     } catch (error) {
       console.log(error.message);
     }
   };
+  setTimeout(() => {
+    setError("");
+    setSuccess("");
+  }, 5000);
   return (
     <>
       <FormDiv>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        {success && <p style={{ color: "green" }}>{success}</p>}
         <Form onSubmit={profileAccountHandler}>
           <FormInput
             type="number"
             placeholder="Enter your Mobile Name"
+            minLength="10"
             onChange={(e) => setMobile(e.target.value)}
           />
           <FormFlex>
@@ -86,7 +109,10 @@ const Form1 = () => {
           </FormFlex>
           <FormFlex>
             <FormLabel>Experience:</FormLabel>
-            <FormSelect onChange={(event) => setExperience(event.target.value)}>
+            <FormSelect
+              required
+              onChange={(event) => setExperience(event.target.value)}
+            >
               <FormOption>Choose a below option</FormOption>
               <FormOption value="0">0</FormOption>
               <FormOption value="1">1</FormOption>
@@ -96,7 +122,7 @@ const Form1 = () => {
               <FormOption value="5">5</FormOption>
             </FormSelect>
           </FormFlex>
-          <FormAddress onChange={(e) => setAddress(e.target.value)}>
+          <FormAddress required onChange={(e) => setAddress(e.target.value)}>
             Enter your address
           </FormAddress>
           <FormFlex>
@@ -106,8 +132,7 @@ const Form1 = () => {
               onChange={(e) => setProfilePicture(e.target.files)}
             />
           </FormFlex>
-
-          <FormBtn>Save</FormBtn>
+          <FormBtn>Update Profile</FormBtn>
         </Form>
       </FormDiv>
     </>
